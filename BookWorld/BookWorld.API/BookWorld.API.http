@@ -1,0 +1,6 @@
+@BookWorld.API_HostAddress = http://localhost:5253
+
+GET {{BookWorld.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
