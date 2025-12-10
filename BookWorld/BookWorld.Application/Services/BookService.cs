@@ -1,4 +1,5 @@
-﻿using BookWorld.Application.DTOs;
+﻿using AutoMapper;
+using BookWorld.Application.DTOs;
 using BookWorld.Application.Interfaces;
 using BookWorld.Domain.Entities;
 using System;
@@ -12,27 +13,18 @@ namespace BookWorld.Application.Services
     public class BookService
     {
         private readonly IBookRepository _bookRepository;
+        private readonly IMapper _mapper;
 
-        public BookService(IBookRepository bookRepository)
+        public BookService(IBookRepository bookRepository, IMapper mapper)
         {
             _bookRepository = bookRepository;
+            _mapper = mapper;
         }
 
         public async Task CreateBookAsync(CreateBookDto dto)
         {
-            Book newBook = new Book
-            {
-                Title = dto.Title,
-                ISBN = dto.ISBN,
-                Price = dto.Price,
-                Stock = dto.Stock,
-                Description = dto.Description,
-                ImageUrl = dto.ImageUrl,
-                AuthorId = dto.AuthorId,
-                CategoryId = dto.CategoryId
-            };
-
-            await _bookRepository.CreateBookAsync(newBook);
+            var entity = _mapper.Map<Book>(dto);
+            await _bookRepository.CreateBookAsync(entity);
         }
 
         //public async Task UpdateBookAsync(BookUpdateDto dto)
@@ -56,44 +48,36 @@ namespace BookWorld.Application.Services
         public async Task DeleteBookAsync(int id)
         {
             var book = await _bookRepository.GetBookByIdAsync(id);
-
-            if (book is null)
-                return;
-
-            await _bookRepository.DeleteBookAsync(book);
+            if (book != null)
+                await _bookRepository.DeleteBookAsync(book);
         }
 
         public async Task<BookDto> GetBookByIdAsync(int id)
         {
             var book = await _bookRepository.GetBookByIdAsync(id);
-
-            if (book is null)
-                return null;
-
-            return ConvertToDto(book);
+            return _mapper.Map<BookDto>(book);
         }
 
         public async Task<List<BookDto>> GetAllAsync()
         {
             var books = await _bookRepository.GetAllBooksAsync();
-
-            return books.Select(x => ConvertToDto(x)).ToList();
+            return _mapper.Map<List<BookDto>>(books);
         }
 
-        private BookDto ConvertToDto(Book book)
-        {
-            return new BookDto
-            {
-                Id = book.Id,
-                Title = book.Title,
-                ISBN = book.ISBN,
-                Price = book.Price,
-                Stock = book.Stock,
-                Description = book.Description,
-                ImageUrl = book.ImageUrl,
-                AuthorName = book.Author?.Name,
-                CategoryName = book.Category?.Name
-            };
-        }
+        //private BookDto ConvertToDto(Book book)
+        //{
+        //    return new BookDto
+        //    {
+        //        Id = book.Id,
+        //        Title = book.Title,
+        //        ISBN = book.ISBN,
+        //        Price = book.Price,
+        //        Stock = book.Stock,
+        //        Description = book.Description,
+        //        ImageUrl = book.ImageUrl,
+        //        AuthorName = book.Author?.Name,
+        //        CategoryName = book.Category?.Name
+        //    };
+        //}
     }
 }

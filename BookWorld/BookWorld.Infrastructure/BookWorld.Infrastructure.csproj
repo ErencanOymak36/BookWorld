@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookWorld.Application\BookWorld.Application.csproj" />
     <ProjectReference Include="..\BookWorld.Domain\BookWorld.Domain.csproj" />
   </ItemGroup>
 

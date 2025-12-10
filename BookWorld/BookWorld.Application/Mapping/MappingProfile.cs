@@ -11,12 +11,14 @@ namespace BookWorld.Application.Mapping
 {
     public class MappingProfile: Profile
     {
-        public MappingProfile()
-        {
-            // Book
+       
+            public MappingProfile()
+            {
+            /// Book
             CreateMap<Book, BookDto>()
                 .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.Name))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+
             CreateMap<CreateBookDto, Book>();
 
             // Author
@@ -31,21 +33,23 @@ namespace BookWorld.Application.Mapping
             CreateMap<User, UserDto>();
             CreateMap<CreateUserDto, User>();
 
-            // Cart & CartItem
+            // Cart
+            CreateMap<Cart, CartDto>();
             CreateMap<CartItem, CartItemDto>()
                 .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
-            CreateMap<Cart, CartDto>();
 
-            // Order & OrderItem
+            // Order
+            CreateMap<Order, OrderDto>();
             CreateMap<OrderItem, OrderItemDto>()
                 .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title));
-            CreateMap<Order, OrderDto>();
 
             // Rental
             CreateMap<Rental, RentalDto>()
                 .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.Book.Title))
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Username));
+
             CreateMap<CreateRentalDto, Rental>();
         }
+        
     }
 }

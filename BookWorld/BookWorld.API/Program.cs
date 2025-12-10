@@ -1,11 +1,16 @@
+using BookWorld.Application.Interfaces;
+using BookWorld.Application.Mapping;
+using BookWorld.Application.Services;
+using BookWorld.Infrastructure;
 using BookWorld.Infrastructure.Data;
+using BookWorld.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Ninject;
 using System.Reflection;
-using BookWorld.Application.DI;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -18,9 +23,19 @@ builder.Services.AddDbContext<BookWorldDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-var kernel = new StandardKernel(new DIModule());
-builder.Services.AddSingleton(kernel);
+// Repository DI
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IRentalRepository, RentalRepository>();
+builder.Services.AddScoped<BookService>();
+// AutoMapper ekleme
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+builder.Services.AddControllers();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,10 +51,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<BookWorldDbContext>();
-    dbContext.Database.EnsureCreated();
-}
+
 
 app.Run();
