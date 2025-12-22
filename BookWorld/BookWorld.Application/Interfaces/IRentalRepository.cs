@@ -15,5 +15,8 @@ namespace BookWorld.Application.Interfaces
         Task<Rental> GetRentalByIdAsync(int id);
         Task<IEnumerable<Rental>> GetAllRentalsAsync();
         Task<IEnumerable<Rental>> GetRentalsByUserIdAsync(int userId);
+        Task<bool> IsBookCurrentlyRentedAsync(int bookId);
+        Task<IEnumerable<Rental>> GetActiveRentalsAsync();
+        Task<IEnumerable<Rental>> GetLateRentalsAsync();
     }
 }

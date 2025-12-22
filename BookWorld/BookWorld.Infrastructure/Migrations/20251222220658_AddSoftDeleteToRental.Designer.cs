@@ -4,6 +4,7 @@ using BookWorld.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookWorld.Infrastructure.Migrations
 {
     [DbContext(typeof(BookWorldDbContext))]
-    partial class BookWorldDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251222220658_AddSoftDeleteToRental")]
+    partial class AddSoftDeleteToRental
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

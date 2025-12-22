@@ -18,11 +18,17 @@ namespace BookWorld.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost("CreateBook")]
         public async Task<IActionResult> CreateBook(CreateBookDto dto)
         {
             await _bookService.CreateBookAsync(dto);
             return Ok("Book Created");
+        }
+        [HttpPost("UpdateBook")]
+        public async Task<IActionResult> UpdateBook(UpdateBookDto dto)
+        {
+            await _bookService.UpdateBookAsync(dto);
+            return Ok("Book Updated");
         }
 
         [HttpGet("{id}")]
@@ -37,5 +43,16 @@ namespace BookWorld.API.Controllers
             var result = await _bookService.GetAllAsync();
             return Ok(result);
         }
+
+        [HttpGet("by-author")]
+        public async Task<IActionResult> GetBooksByAuthor([FromQuery] string authorName)
+        {
+            if (string.IsNullOrWhiteSpace(authorName))
+                return BadRequest("Author name is required");
+
+            var result = await _bookService.GetBookByAuthorAsync(authorName);
+            return Ok(result);
+        }
+
     }
 }

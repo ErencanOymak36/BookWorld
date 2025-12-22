@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BookWorld.Application.DTOs
 {
-    public class UpdateBookDto:CreateBookDto
+    public class CreateOrderDto
     {
-        public int Id { get; set; }
-      
+        public int UserId { get; set; }
+        public IEnumerable<CreateOrderItemDto> OrderItems { get; set; }
     }
 }

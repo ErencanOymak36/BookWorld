@@ -35,8 +35,12 @@ namespace BookWorld.Infrastructure.Repositories
 
         public async Task<Rental> DeleteRentalAsync(Rental rental)
         {
-            _context.Rentals.Remove(rental);
+            rental.IsDeleted = true;
+            rental.DeletedAt = DateTime.UtcNow;
+
+            _context.Rentals.Update(rental);
             await _context.SaveChangesAsync();
+
             return rental;
         }
 
@@ -62,6 +66,31 @@ namespace BookWorld.Infrastructure.Repositories
                 .Include(r => r.User)
                 .Include(r => r.Book)
                 .Where(r => r.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<bool> IsBookCurrentlyRentedAsync(int bookId)
+        {
+            return await _context.Rentals.AnyAsync(r => r.BookId == bookId && r.ReturnDate == null);
+        }
+
+        public async Task<IEnumerable<Rental>> GetActiveRentalsAsync()
+        {
+            return await _context.Rentals
+                .Include(r => r.Book)
+                .Include(r => r.User)
+                .Where(r => r.ReturnDate == null)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Rental>> GetLateRentalsAsync()
+        {
+            return await _context.Rentals
+                .Include(r => r.Book)
+                .Include(r => r.User)
+                .Where(r =>
+                    r.ReturnDate == null &&
+                    DateTime.UtcNow > r.RentDate.AddDays(r.RentalPeriodDays))
                 .ToListAsync();
         }
     }

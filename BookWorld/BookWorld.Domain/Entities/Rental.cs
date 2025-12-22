@@ -20,6 +20,9 @@ namespace BookWorld.Domain.Entities
         public int RentalPeriodDays { get; set; }   // Örn: 7 gün, 14 gün
         public decimal RentalPrice { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
+
         // Navigation
         public User User { get; set; }
         public Book Book { get; set; }
