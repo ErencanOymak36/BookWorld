@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BookWorld.Application.DTOs;
 using BookWorld.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace BookWorld.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BookController : ControllerBase
     {
         private readonly BookService _bookService;
@@ -37,7 +39,9 @@ namespace BookWorld.API.Controllers
             var result=await _bookService.GetBookByIdAsync(id);
             return Ok(result);
         }
-        [HttpGet]
+
+        
+        [HttpGet("GetAllBooks")]
         public async Task<IActionResult> GetAllBooks()
         {
             var result = await _bookService.GetAllAsync();

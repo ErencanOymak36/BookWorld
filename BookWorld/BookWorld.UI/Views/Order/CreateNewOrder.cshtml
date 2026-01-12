@@ -1,0 +1,15 @@
+﻿@model BookWorld.Application.DTOs.CreateOrderItemDto
+
+<h3> Satın Al</h3>
+
+<form method="post">
+    <input type="hidden" asp-for="BookId" />
+
+    <div class="mb-3">
+        <label>Adet</label>
+        <input asp-for="Quantity" class="form-control" min="1" />
+    </div>
+
+    <button class="btn btn-success">Satın Al</button>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

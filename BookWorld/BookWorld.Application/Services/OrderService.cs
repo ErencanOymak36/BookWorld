@@ -44,6 +44,12 @@ namespace BookWorld.Application.Services
             {
                 var book = await _bookRepository.GetBookByIdAsync(item.BookId);
 
+                if (book.Stock < item.Quantity)
+                    throw new Exception($"{book.Title} için yeterli stok yok");
+
+                // Stok düş
+                book.Stock -= item.Quantity;
+
                 var orderItem = new OrderItem
                 {
                     BookId = item.BookId,
@@ -53,6 +59,8 @@ namespace BookWorld.Application.Services
 
                 order.TotalAmount += book.Price * item.Quantity;
                 order.OrderItems.Add(orderItem);
+                
+                _bookRepository.UpdateBookAsync(book);
             }
 
             await _orderRepository.CreateOrderAsync(order);

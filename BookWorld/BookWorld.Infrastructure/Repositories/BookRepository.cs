@@ -32,7 +32,8 @@ namespace BookWorld.Infrastructure.Repositories
 
         public async Task<IEnumerable<Book>> GetAllBooksAsync()
         {
-            return await _context.Books.OrderByDescending(b=>b.Id).ToListAsync();
+            //return await _context.Books.OrderByDescending(b=>b.Id).ToListAsync();
+            return await _context.Books.Include(b => b.Author).Include(b => b.Category).ToListAsync();
         }
 
         public async Task<Book> GetBookByIdAsync(int id)

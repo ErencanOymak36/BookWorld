@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookWorld.Application\BookWorld.Application.csproj" />
+    <ProjectReference Include="..\BookWorld.Infrastructure\BookWorld.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

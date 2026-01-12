@@ -1,6 +1,7 @@
 ﻿using BookWorld.Application.DTOs;
 using BookWorld.Application.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookWorld.API.Controllers
@@ -37,14 +38,14 @@ namespace BookWorld.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet("getbyuser/{userId}")]
         public async Task<IActionResult> GetByUser(int userId)
         {
             var result = await _rentalService.GetByUserIdAsync(userId);
             return Ok(result);
         }
 
-        [HttpPut("return/{id}")]
+        [HttpPut("returnbook/{id}")]
         public async Task<IActionResult> ReturnBook(int id)
         {
             await _rentalService.ReturnRentalAsync(id);
@@ -68,6 +69,19 @@ namespace BookWorld.API.Controllers
         public async Task<IActionResult> LateRentals()
         {
             return Ok(await _rentalService.GetLateRentalsAsync());
+        }
+
+        [HttpPost("CancelRental")]
+        public async Task<IActionResult> CancelRental(int id)
+        {
+            return Ok(await _rentalService.CancelRentalManuelAsync(id));
+        }
+
+
+        [HttpGet("Completed")]
+        public async Task<IActionResult> CompletedRentals()
+        {
+            return Ok(await _rentalService.GetCompletedRentalsAsync());
         }
     }
 }

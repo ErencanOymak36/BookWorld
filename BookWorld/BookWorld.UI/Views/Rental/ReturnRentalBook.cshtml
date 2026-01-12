@@ -1,0 +1,23 @@
+﻿@model BookWorld.UI.Models.ReturnRentalViewModel
+
+@{
+    ViewData["Title"] = "İade Onayı";
+}
+
+<div class="container mt-4">
+    <h4>İade Onayı</h4>
+
+    <p>
+        <strong>@Model.BookTitle</strong> kitabını iade etmek istediğinize emin misiniz?
+    </p>
+
+    <form asp-controller="Rental"asp-action="ReturnRental"method="post"><input type="hidden" asp-for="RentalId" />
+
+        <button type="submit" class="btn btn-warning">
+            İade Et
+        </button>
+        <a asp-controller="Home"asp-action="Index"class="btn btn-secondary">
+            Vazgeç
+        </a>
+    </form>
+</div>

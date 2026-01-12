@@ -1,0 +1,83 @@
+﻿@using BookWorld.Application.DTOs
+@model List<RentalDto>
+
+@{
+    ViewData["Title"] = "Kiralanan Kitaplarım";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">📦 Kiralanan Kitaplarım</h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Kitap</th>
+                <th>Kiralama Tarihi</th>
+                <th>İade Tarihi</th>
+                <th>Ücret</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var rental in Model)
+                {
+                    <tr>
+                        <td>@rental.Id</td>
+                        <td>@rental.BookTitle</td>
+                        <td>@rental.RentDate.ToShortDateString()</td>
+                        <td>
+                            @if (rental.ReturnDate.HasValue)
+                            {
+                                <span class="badge bg-success">
+                                    @rental.ReturnDate.Value.ToShortDateString()
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    İade edilmedi
+                                </span>
+                            }
+                        </td>
+                        <td>@rental.RentalPrice ₺</td>
+                        <td>
+                            @if (!rental.ReturnDate.HasValue)
+                            {
+                                <form asp-controller="Rental"asp-action="ReturnRental"method="post"style="display:inline">
+
+                                    <input type="hidden" name="rentalId" value="@rental.Id" />
+
+                                    <button type="submit"class="btn btn-sm btn-warning">
+                                        İade Et
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Tamamlandı</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">
+                        Kiralama bulunamadı
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

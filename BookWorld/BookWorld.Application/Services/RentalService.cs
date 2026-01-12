@@ -134,5 +134,21 @@ namespace BookWorld.Application.Services
             var rentals = await _rentalRepository.GetLateRentalsAsync();
             return _mapper.Map<IEnumerable<RentalDto>>(rentals);
         }
+
+        public async Task<RentalDto> CancelRentalManuelAsync(int id)
+        {
+            var rental= await _rentalRepository.CancelRentalAsync(id);
+            if(rental == null)
+            {
+                return null;
+            }
+            return _mapper.Map<RentalDto>(rental);
+        }
+
+        public async Task<IEnumerable<RentalDto>> GetCompletedRentalsAsync()
+        {
+            var rentals = await _rentalRepository.GetCompletedRentalsAsync();
+            return _mapper.Map<IEnumerable<RentalDto>>(rentals);
+        }
     }
 }

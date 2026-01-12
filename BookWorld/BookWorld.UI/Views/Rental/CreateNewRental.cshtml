@@ -1,0 +1,15 @@
+﻿@model BookWorld.Application.DTOs.CreateRentalDto
+
+<h3> Kitap Kirala</h3>
+
+<form method="post">
+    <input type="hidden" asp-for="BookId" />
+
+    <div class="mb-3">
+        <label>Kiralama Süresi (Gün)</label>
+        <input asp-for="RentalPeriodDays" class="form-control" min="1" />
+    </div>
+
+    <button class="btn btn-success">Kirala</button>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

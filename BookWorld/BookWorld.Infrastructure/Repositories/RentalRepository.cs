@@ -93,5 +93,28 @@ namespace BookWorld.Infrastructure.Repositories
                     DateTime.UtcNow > r.RentDate.AddDays(r.RentalPeriodDays))
                 .ToListAsync();
         }
+
+        public async Task<Rental> CancelRentalAsync(int id)
+        {
+            var rental =await _context.Rentals.FirstOrDefaultAsync(r=>r.Id==id);
+
+            if (rental == null)
+            {
+                return rental;
+            }
+            
+            rental.ReturnDate = DateTime.UtcNow;
+            _context.Rentals.Update(rental);
+            await _context.SaveChangesAsync();
+            return rental;
+        }
+
+        public async Task<IEnumerable<Rental>> GetCompletedRentalsAsync()
+        {
+            return await _context.Rentals
+                .Include(r => r.Book)
+                .Include(r => r.User)
+                .Where(r =>r.ReturnDate != null).ToListAsync();
+        }
     }
 }
