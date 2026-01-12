@@ -68,5 +68,38 @@ namespace BookWorld.UI.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MyOrders()
+        {
+            _logger.LogInformation("Kullanıcının siparişleri getiriliyor");
+
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            int userId = 1;
+
+            var response = await client.GetAsync($"api/order/getbyuser/{userId}");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                _logger.LogWarning("Token geçersiz, logout yapılıyor");
+                Response.Cookies.Delete("jwt");
+                return RedirectToAction("Login", "Home");
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Siparişler alınamadı. StatusCode: {StatusCode}", response.StatusCode);
+                ViewBag.Error = "Siparişler alınamadı";
+                return View(new List<OrderDto>());
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var orders = JsonSerializer.Deserialize<List<OrderDto>>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return View(orders);
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace BookWorld.API.Controllers
             return Ok("Order created");
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet("getbyuser/{userId}")]
         public async Task<IActionResult> GetOrderByUser(int userId)
         {
             var result = await _orderService.GetOrdersByUserIdAsync(userId);

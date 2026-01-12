@@ -40,10 +40,11 @@ namespace BookWorld.UI.Controllers
         {
             _logger.LogInformation("Kiralama işlemi başlatıldı");
 
-            if (!_currentUserService.IsAuthenticated)
-                return RedirectToAction("Login", "Auth");
+            //if (!_currentUserService.IsAuthenticated)
+            //    return RedirectToAction("Login", "Auth");
 
-            var userId = _currentUserService.UserId;
+           // var userId = _currentUserService.UserId;
+            var userId = 1;
 
             var client = _httpClientFactory.CreateClient("ApiClient");
 
@@ -110,10 +111,11 @@ namespace BookWorld.UI.Controllers
         {
             _logger.LogInformation("Kullanıcıya ait kiralamalar getiriliyor");
 
-            if (!_currentUserService.IsAuthenticated)
-                return RedirectToAction("Login", "Auth");
+            //if (!_currentUserService.IsAuthenticated)
+            //    return RedirectToAction("Login", "Auth");
 
-            var userId = _currentUserService.UserId;
+            //var userId = _currentUserService.UserId;
+            var userId = 1;
 
             var client = _httpClientFactory.CreateClient("ApiClient");
 
