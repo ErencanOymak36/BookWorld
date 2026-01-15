@@ -39,5 +39,4 @@ Proje Clean Architecture prensiplerine uygun olarak geliştirilmiştir:
 3. Migration ve update-database çalıştırın
 4. API ve UI projelerini başlatın
 
-## 📄 Lisans
-Bu proje eğitim ve demo amaçlı geliştirilmiştir.
+
