@@ -3,6 +3,7 @@ using BookWorld.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookWorld.API.Controllers
 {
@@ -21,16 +22,20 @@ namespace BookWorld.API.Controllers
         [HttpPost("CreateOrder")]
         public async Task<IActionResult> CreateOrder(CreateOrderDto dto)
         {
-            await _orderService.CreateOrderAsync(dto);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            await _orderService.CreateOrderAsync(dto,userId);
             return Ok("Order created");
         }
 
-        [HttpGet("getbyuser/{userId}")]
-        public async Task<IActionResult> GetOrderByUser(int userId)
+        [HttpGet("getbyuser")]
+        public async Task<IActionResult> GetOrderByUser()
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await _orderService.GetOrdersByUserIdAsync(userId);
             return Ok(result);
         }
+
+      
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(int id)

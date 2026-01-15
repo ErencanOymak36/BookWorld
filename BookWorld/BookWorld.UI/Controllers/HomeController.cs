@@ -23,10 +23,7 @@ namespace BookWorld.UI.Controllers
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Index sayfasý açýlýyor, kitaplar API'den çekilecek");
-
-
             var client = _httpClientFactory.CreateClient("ApiClient");
-
             var response = await client.GetAsync("api/book/GetAllBooks");
 
             if (!response.IsSuccessStatusCode)
@@ -55,27 +52,14 @@ namespace BookWorld.UI.Controllers
 
             // Data parse
             var json = await response.Content.ReadAsStringAsync();
-
-            var books = JsonSerializer.Deserialize<List<BookDto>>(
-                json,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            );
+            var books = JsonSerializer.Deserialize<List<BookDto>>(json,new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             _logger.LogInformation("Kitaplar baþarýyla çekildi. Count: {Count}", books?.Count ?? 0);
 
             return View(books);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+      
 
         [HttpGet]
         public IActionResult Login()
@@ -116,10 +100,7 @@ namespace BookWorld.UI.Controllers
             }
 
             var responseJson = await response.Content.ReadAsStringAsync();
-            var tokenResponse = JsonSerializer.Deserialize<Models.LoginResponseDto>(
-                responseJson,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            );
+            var tokenResponse = JsonSerializer.Deserialize<Models.LoginResponseDto>(responseJson,new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             Response.Cookies.Append("jwt", tokenResponse.AccessToken, new CookieOptions
             {

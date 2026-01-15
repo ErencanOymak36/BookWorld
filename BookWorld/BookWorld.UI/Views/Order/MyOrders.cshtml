@@ -51,11 +51,10 @@
                         
                         <td>@order.TotalAmount ₺</td>
                         <td>
-                            <a asp-action="Details"
-                               asp-route-id="@order.Id"
-                               class="btn btn-sm btn-primary">
+                            <button class="btn btn-sm btn-primary"
+                                    onclick="showOrderDetails(@order.Id)">
                                 Detay
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 }
@@ -63,3 +62,107 @@
         </table>
     }
 </div>
+
+
+<!-- Order Detail Modal -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">📦 Sipariş Detayı</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div id="orderDetailContent">
+                    <div class="text-center">
+                        <span class="spinner-border"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showOrderDetails(orderId) {
+
+        const modalElement = document.getElementById('orderDetailModal');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+
+        const content = document.getElementById("orderDetailContent");
+        content.innerHTML = `
+            <div class="text-center">
+                <span class="spinner-border"></span>
+            </div>`;
+
+       fetch(`/Order/OrderDetails?orderId=${orderId}`)
+            .then(response => {
+                if (!response.ok)
+                    throw new Error("API error");
+                return response.json();
+            })
+            .then(items => {
+
+                if (!items || items.length === 0) {
+                    content.innerHTML = `
+                        <div class="alert alert-info">
+                            Sipariş detayı bulunamadı
+                        </div>`;
+                    return;
+                }
+
+                let total = 0;
+
+                let html = `
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Kitap</th>
+                                <th>Adet</th>
+                                <th>Birim Fiyat</th>
+                                <th>Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                items.forEach(item => {
+                    const rowTotal = item.quantity * item.unitPrice;
+                    total += rowTotal;
+
+                    html += `
+                        <tr>
+                            <td>${item.bookTitle}</td>
+                            <td class="text-center">${item.quantity}</td>
+                            <td>${item.unitPrice} ₺</td>
+                            <td><strong>${rowTotal} ₺</strong></td>
+                        </tr>
+                    `;
+                });
+
+                html += `
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-end">Genel Toplam</th>
+                                <th>${total} ₺</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                `;
+
+                content.innerHTML = html;
+            })
+            .catch(() => {
+                content.innerHTML = `
+                    <div class="alert alert-danger">
+                        Sipariş detayları yüklenirken hata oluştu
+                    </div>`;
+            });
+    }
+</script>

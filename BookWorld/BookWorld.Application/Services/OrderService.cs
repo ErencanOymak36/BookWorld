@@ -29,11 +29,11 @@ namespace BookWorld.Application.Services
             _mapper = mapper;
         }
 
-        public async Task CreateOrderAsync(CreateOrderDto dto)
+        public async Task CreateOrderAsync(CreateOrderDto dto,int userId)
         {
             var order = new Order
             {
-                UserId = dto.UserId,
+                UserId = userId,
                 OrderDate = DateTime.UtcNow,
                 Status = "Created",
                 TotalAmount = 0,

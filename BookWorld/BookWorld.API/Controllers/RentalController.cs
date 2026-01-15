@@ -1,9 +1,11 @@
 ﻿using BookWorld.Application.DTOs;
 using BookWorld.Application.Services;
+using BookWorld.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BookWorld.API.Controllers
 {
@@ -22,7 +24,8 @@ namespace BookWorld.API.Controllers
         [HttpPost("CreateRental")]
         public async Task<IActionResult> CreateRental(CreateRentalDto dto)
         {
-            await _rentalService.CreateRentalAsync(dto);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            await _rentalService.CreateRentalAsync(dto,userId);
             return Ok("Rental created");
         }
 
@@ -40,9 +43,10 @@ namespace BookWorld.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("getbyuser/{userId}")]
-        public async Task<IActionResult> GetByUser(int userId)
+        [HttpGet("getbyuser")]
+        public async Task<IActionResult> GetByUser()
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await _rentalService.GetByUserIdAsync(userId);
             return Ok(result);
         }

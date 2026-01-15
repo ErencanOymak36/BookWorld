@@ -40,12 +40,6 @@ namespace BookWorld.UI.Controllers
         {
             _logger.LogInformation("Kiralama işlemi başlatıldı");
 
-            //if (!_currentUserService.IsAuthenticated)
-            //    return RedirectToAction("Login", "Auth");
-
-           // var userId = _currentUserService.UserId;
-            var userId = 1;
-
             var client = _httpClientFactory.CreateClient("ApiClient");
 
             var content = new StringContent(JsonSerializer.Serialize(model),Encoding.UTF8,"application/json");
@@ -111,21 +105,14 @@ namespace BookWorld.UI.Controllers
         {
             _logger.LogInformation("Kullanıcıya ait kiralamalar getiriliyor");
 
-            //if (!_currentUserService.IsAuthenticated)
-            //    return RedirectToAction("Login", "Auth");
-
-            //var userId = _currentUserService.UserId;
-            var userId = 1;
 
             var client = _httpClientFactory.CreateClient("ApiClient");
 
-            var response = await client.GetAsync($"api/rental/getbyuser/{userId}");
+            var response = await client.GetAsync($"api/rental/getbyuser");
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError(
-                    "Kiralama listesi alınamadı. StatusCode: {StatusCode}",
-                    response.StatusCode);
+                _logger.LogError("Kiralama listesi alınamadı. StatusCode: {StatusCode}",response.StatusCode);
 
                 ViewBag.Error = "Kiralama bilgileri alınamadı";
                 return View(new List<RentalDto>());
@@ -133,9 +120,7 @@ namespace BookWorld.UI.Controllers
 
             var json = await response.Content.ReadAsStringAsync();
 
-            var rentals = JsonSerializer.Deserialize<List<RentalDto>>(
-                json,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            var rentals = JsonSerializer.Deserialize<List<RentalDto>>(json,new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
             );
 
             _logger.LogInformation("Kiralama listesi başarıyla alındı. Count: {Count}",rentals?.Count ?? 0);

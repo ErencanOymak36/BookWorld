@@ -26,7 +26,7 @@ namespace BookWorld.Application.Services
             _mapper = mapper;
         }
 
-        public async Task CreateRentalAsync(CreateRentalDto dto)
+        public async Task CreateRentalAsync(CreateRentalDto dto,int userId)
         {
             var isRented = await _rentalRepository.IsBookCurrentlyRentedAsync(dto.BookId);
 
@@ -44,7 +44,7 @@ namespace BookWorld.Application.Services
 
             var rental = new Rental
             {
-                UserId = dto.UserId,
+                UserId = userId,
                 BookId = dto.BookId,
                 RentDate = DateTime.UtcNow,
                 RentalPeriodDays = dto.RentalPeriodDays,

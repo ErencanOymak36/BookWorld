@@ -1,0 +1,37 @@
+﻿@using BookWorld.Application.DTOs
+@model CreateAuthorDto
+
+@{
+    ViewData["Title"] = "Yazar Ekle";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">✍️ Yazar Ekle</h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    <form asp-action="CreateNewAuthor" method="post">
+        <div class="mb-3">
+            <label class="form-label">Yazar Adı</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Doğum Tarihi</label>
+            <input asp-for="BirthDate" type="date" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Kaydet
+        </button>
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+            İptal
+        </a>
+    </form>
+</div>

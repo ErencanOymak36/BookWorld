@@ -37,18 +37,12 @@ namespace BookWorld.UI.Controllers
         public async Task<IActionResult> CreateNewOrder(CreateOrderItemDto model)
         {
             _logger.LogInformation("Sipariş oluşturma işlemi başlatıldı");
-
-            //if (!_currentUserService.IsAuthenticated)
-            //    return RedirectToAction("Login", "Auth");
-
-            // var userId = _currentUserService.UserId;
-            var userId = 1;
-
+ 
             var client = _httpClientFactory.CreateClient("ApiClient");
 
             var orderDto = new CreateOrderDto
             {
-                UserId = userId, 
+              
                 OrderItems = new List<CreateOrderItemDto> { model }
             };
 
@@ -75,9 +69,8 @@ namespace BookWorld.UI.Controllers
             _logger.LogInformation("Kullanıcının siparişleri getiriliyor");
 
             var client = _httpClientFactory.CreateClient("ApiClient");
-            int userId = 1;
-
-            var response = await client.GetAsync($"api/order/getbyuser/{userId}");
+           
+            var response = await client.GetAsync($"api/order/getbyuser");
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -101,5 +94,21 @@ namespace BookWorld.UI.Controllers
 
             return View(orders);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> OrderDetails(int orderId)
+        {
+            var client = _httpClientFactory.CreateClient("ApiClient");
+
+            var response = await client.GetAsync($"api/orderitem/{orderId}");
+
+            if (!response.IsSuccessStatusCode)
+                return BadRequest();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return Content(json, "application/json");
+        }
+
     }
 }

@@ -15,21 +15,27 @@
         </div>
     }
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Kitap</th>
-                <th>Kiralama Tarihi</th>
-                <th>İade Tarihi</th>
-                <th>Ücret</th>
-                <th>İşlem</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                foreach (var rental in Model)
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            Henüz kiralanmış kitabınız bulunmamaktadır.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Kitap</th>
+                    <th>Kiralama Tarihi</th>
+                    <th>İade Tarihi</th>
+                    <th>Ücret</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rental in Model)
                 {
                     <tr>
                         <td>@rental.Id</td>
@@ -53,11 +59,9 @@
                         <td>
                             @if (!rental.ReturnDate.HasValue)
                             {
-                                <form asp-controller="Rental"asp-action="ReturnRental"method="post"style="display:inline">
-
+                                <form asp-controller="Rental"asp-action="ReturnRental" method="post"style="display:inline">
                                     <input type="hidden" name="rentalId" value="@rental.Id" />
-
-                                    <button type="submit"class="btn btn-sm btn-warning">
+                                    <button type="submit" class="btn btn-sm btn-warning">
                                         İade Et
                                     </button>
                                 </form>
@@ -69,15 +73,7 @@
                         </td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="6" class="text-center">
-                        Kiralama bulunamadı
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    }
 </div>
